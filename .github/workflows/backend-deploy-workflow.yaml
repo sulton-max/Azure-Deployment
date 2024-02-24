@@ -23,5 +23,5 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: ./src/Demo.Pipeline.Backend
-        file: ./src/Demo.Pipeline.Backend/Dockerfile
+        file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
         push: true
