@@ -22,7 +22,6 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
-        context: .  
-        file: ./Dockerfile
+        context: ./src/Demo.Pipeline.Backend
+        file: ./src/Demo.Pipeline.Backend/Dockerfile
         push: true
-        tags: ${{ secrets.ACR_LOGIN_SERVER }}/your-image-name:latest
