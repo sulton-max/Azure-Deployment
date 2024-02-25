@@ -1,6 +1,13 @@
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello Docker update!");
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.MapGet("/", () => "Hello devops!");
 
 app.Run();
