@@ -29,3 +29,28 @@ jobs:
         file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
         tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ github.sha }}
         push: true
+
+  create-container-app:
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create Azure Container App (if it doesn't exist)
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az containerapp create \
+            --resource-group my-resource-group \
+            --name my-container-app \
+            --image ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ github.sha }} \
+
+            - name: Update Azure Container App (if it already exists)
+              uses: azure/CLI@v1
+              with:
+                azcliversion: <desired_version>
+                inlineScript: |
+                  az containerapp update \
+                    --resource-group demo-pipeline \
+                    --name test-demo-container \
+                    --image ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ github.sha }} 
+    
