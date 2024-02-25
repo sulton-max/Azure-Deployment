@@ -3,7 +3,7 @@ name: Deploy to Azure Container Registry
 on:
   push:
     branches:
-      - 'release/v1.0.0'  # Update this line with your branch
+      - release/**
 
 jobs:
   build-and-deploy:
@@ -27,5 +27,5 @@ jobs:
       with:
         context: ./src/Demo.Pipeline.Backend
         file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
-        tags: pipelinedemo2:latest
+        tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ github.sha }}
         push: true
