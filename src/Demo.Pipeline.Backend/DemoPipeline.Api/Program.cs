@@ -1,6 +1,6 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello Docker update!");
+app.MapGet("/", () => "Hello deployment!");
 
 app.Run();
