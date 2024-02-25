@@ -20,14 +20,10 @@ jobs:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
 
-    - name: Extract Version Number
-      id: extract_version
-      run: echo ::set-output name=VERSION::${{ github.ref_name }}
-
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
       with:
         context: ./src/Demo.Pipeline.Backend
         file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
-        tags: <span class="math-inline">\{\{ secrets\.ACR\_LOGIN\_SERVER \}\}/your\-image\-name\:</span>{{ steps.extract_version.outputs.VERSION }}
+        tags: deployment-pipeline:latest
         push: true
