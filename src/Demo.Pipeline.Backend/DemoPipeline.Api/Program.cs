@@ -8,6 +8,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/", () => "Hello devops!");
+app.MapGet("/", () => "Hello docker!");
 
 app.Run();
