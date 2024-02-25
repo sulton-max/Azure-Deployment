@@ -27,5 +27,5 @@ jobs:
       with:
         context: ./src/Demo.Pipeline.Backend
         file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
-        tags: deployment-pipeline:latest
+        tags: pipelinedemo2:latest
         push: true
