@@ -53,4 +53,11 @@ jobs:
                     --resource-group demo-pipeline \
                     --name test-demo-container \
                     --image ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ github.sha }} 
+          
+          
+            inlineScript: |
+                  az containerapp update \
+                    --resource-group demo-pipeline \
+                    --name test-demo-container \
+                    --image ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ github.sha }} 
     
