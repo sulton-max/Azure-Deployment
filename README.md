@@ -34,6 +34,17 @@ These branches must be created
 
 In this example we will create resources in azure cloud 
 
+
+#### Create service principal
+
+- Create Service Principal ( registered application ) with following command and copy result credentials in json. Those credentials will be used by github actions
+
+```Bash
+az ad sp create-for-rbac --name github-actions-app --role contributor --scopes /subscriptions/<subscription-id>/resourceGroups/<rg-name> --json-auth --output json
+```
+
+Update `<subscription-id>` - with subscription Id and `<rg-name>` - with resource group name
+
 #### Create Azure Container Registry
 
 - Go to "Resource Groups" page
