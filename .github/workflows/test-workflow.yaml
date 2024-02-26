@@ -30,7 +30,7 @@ jobs:
         with:
           context: ./src/Demo.Pipeline.Backend
           file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ version }}
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:$version
           push: true
 
   create-container-app:
@@ -49,4 +49,4 @@ jobs:
           acrName: pipelinedemo2
           containerAppName: test-demo-container
           resourceGroup: demo-pipeline
-          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ version }}
+          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:$version
