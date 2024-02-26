@@ -1,9 +1,11 @@
-name: Deploy to Azure Container Registry
+name: Deploy Backend to ACR and ACA
 
 on:
   push:
     branches:
       - release/**
+    paths:
+      - 'src/Demo.Pipeline.Backend/**'
 
 jobs:
   build-and-deploy:
@@ -13,20 +15,20 @@ jobs:
       - name: Checkout GitHub Action
         uses: actions/checkout@v4
 
-      - name: Extract release version and Set to variable
+      - name: Set release version
         id: release_version
         run: |
           VERSION=$(echo "${{ github.ref }}" | sed -E 's/^refs\/heads\/release\/(.*)$/\1/')
           echo "IMAGE_VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Log in to Azure Container Registry
+      - name: Log in to Azure
         uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and push image to ACR
         uses: docker/build-push-action@v2
         with:
           context: ./src/Demo.Pipeline.Backend
@@ -39,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Extract release version and Set to variable
+      - name:  Set release version
         id: release_version
         run: |
           VERSION=$(echo "${{ github.ref }}" | sed -E 's/^refs\/heads\/release\/(.*)$/\1/')
@@ -50,7 +52,7 @@ jobs:
         with:
           creds: ${{ secrets.SP_CREDENTIALS }}
 
-      - name: Build and deploy Container App
+      - name: Deploy image to ACA
         uses: azure/container-apps-deploy-action@v1
         with:
           acrName: pipelinedemo2
