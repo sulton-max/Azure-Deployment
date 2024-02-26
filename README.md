@@ -15,13 +15,15 @@ We have source code in one of our repositories, we need to deploy source code fo
 
 #### Solution overviews
 
+<img style="width: 100%" src="docs/assets/images/1.png" alt="Branches image"/>
+
 - Create necessary branches
 - Create cloud resources
 - Setup workflows
 
 ### Creating necessary branches
 
-<img style="width: 100%" src="docs/assets/images/1.png" alt="Branches image"/>
+<img style="width: 100%" src="docs/assets/images/2.png" alt="Branches image"/>
 
 These branches must be created 
 
