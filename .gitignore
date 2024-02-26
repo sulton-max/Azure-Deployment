@@ -2,3 +2,5 @@
 src/.idea/.idea.Demo.Pipeline.Backend/.idea/
 
 .idea/
+
+.DS_Store
