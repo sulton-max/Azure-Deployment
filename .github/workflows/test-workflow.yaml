@@ -13,7 +13,7 @@ jobs:
       - name: Checkout GitHub Action
         uses: actions/checkout@v4
 
-      - name: Extract version from branch name
+      - name: Extract release version and Set to variable
         id: release_version
         run: |
           VERSION=$(echo "${{ github.ref }}" | sed -E 's/^refs\/heads\/release\/(.*)$/\1/')
@@ -30,7 +30,7 @@ jobs:
         with:
           context: ./src/Demo.Pipeline.Backend
           file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ env.RELEASE_VERSION }}
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ env.VERSION }}
           push: true
 
   create-container-app:
@@ -38,6 +38,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Extract release version and Set to variable
+        id: release_version
+        run: |
+          VERSION=$(echo "${{ github.ref }}" | sed -E 's/^refs\/heads\/release\/(.*)$/\1/')
+
       - name: Log in to Azure
         uses: azure/login@v1
         with:
@@ -49,4 +54,4 @@ jobs:
           acrName: pipelinedemo2
           containerAppName: test-demo-container
           resourceGroup: demo-pipeline
-          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ env.VERSION }}
