@@ -8,6 +8,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/", () => "Update from release v2.0.1 branch!");
+app.MapGet("/", () => "Update v2.0.1!");
 
 app.Run();
