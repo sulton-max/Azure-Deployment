@@ -14,8 +14,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Extract version from branch name using sed
+        id: release-version
         run: |
-          version=$(echo "${{ github.ref }}" | sed -E 's/^release\/(.*)$/\1/')
+          release-version=$(echo "${{ github.ref }}" | sed -E 's/^release\/(.*)$/\1/')
           echo "Extracted version: $version"
 
       - name: Log in to Azure Container Registry
@@ -30,7 +31,7 @@ jobs:
         with:
           context: ./src/Demo.Pipeline.Backend
           file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:$version
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ steps.vars.outputs.release-version }}
           push: true
 
   create-container-app:
