@@ -8,6 +8,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/", () => "Latest update from v2.0.1!");
+app.MapGet("/", () => "Test update !");
 
 app.Run();
