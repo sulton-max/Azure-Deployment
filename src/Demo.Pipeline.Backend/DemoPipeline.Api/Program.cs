@@ -8,6 +8,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/", () => "Hello update!");
+app.MapGet("/", () => "This is CI/CD for you bro!");
 
 app.Run();
