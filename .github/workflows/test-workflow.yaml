@@ -56,4 +56,4 @@ jobs:
           acrName: pipelinedemo2
           containerAppName: test-demo-container
           resourceGroup: demo-pipeline
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ env.IMAGE_VERSION }}
+          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ env.IMAGE_VERSION }}
