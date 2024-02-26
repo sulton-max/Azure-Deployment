@@ -49,4 +49,4 @@ jobs:
           acrName: pipelinedemo2
           containerAppName: test-demo-container
           resourceGroup: demo-pipeline
-          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:$version
+          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2
