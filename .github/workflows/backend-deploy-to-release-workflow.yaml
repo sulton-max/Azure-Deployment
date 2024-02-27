@@ -1,4 +1,4 @@
-name: Deploy Backend to ACR and ACA
+name: Deploy Backend to ACR and ACA in Release Env
 
 on:
   push:
