@@ -55,7 +55,7 @@ jobs:
       - name: Deploy image to ACA
         uses: azure/container-apps-deploy-action@v1
         with:
-          acrName: AZ_BACKEND_ACR_NAME
-          containerAppName: AZ_FRONTEND_ACA_NAME
-          resourceGroup: AZ_RG_NAME
+          acrName: ${{ secrets.AZ_BACKEND_ACR_NAME }}
+          containerAppName: ${{ secrets.AZ_FRONTEND_ACA_NAME }}
+          resourceGroup: ${{ secrets.AZ_RG_NAME }}
           imageToDeploy: ${{ secrets.AZ_BACKEND_ACR_LOGIN_SERVER }}/${{ secrets.AZ_BACKEND_ACR_NAME }}:${{ env.IMAGE_VERSION }}
