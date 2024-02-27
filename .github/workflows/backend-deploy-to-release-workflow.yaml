@@ -24,16 +24,16 @@ jobs:
       - name: Log in to Azure
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          login-server: ${{ secrets.AZ_BACKEND_ACR_LOGIN_SERVER }}
+          username: ${{ secrets.AZ_BACKEND_ACR_USERNAME }}
+          password: ${{ secrets.AZ_BACKEND_ACR_PASSWORD }}
 
       - name: Build and push image to ACR
         uses: docker/build-push-action@v2
         with:
           context: ./src/Demo.Pipeline.Backend
           file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ env.IMAGE_VERSION }}
+          tags: ${{ secrets.ACR_LOGIN_SERVER }}/AZ_BACKEND_ACR_NAME:${{ env.IMAGE_VERSION }}
           push: true
 
   create-container-app:
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name:  Set release version
+      - name: Set release version
         id: release_version
         run: |
           VERSION=$(echo "${{ github.ref }}" | sed -E 's/^refs\/heads\/release\/(.*)$/\1/')
@@ -50,12 +50,12 @@ jobs:
       - name: Log in to Azure
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.SP_CREDENTIALS }}
+          creds: ${{ secrets.AZ_SP_CREDENTIALS }}
 
       - name: Deploy image to ACA
         uses: azure/container-apps-deploy-action@v1
         with:
-          acrName: pipelinedemo2
-          containerAppName: test-demo-container
-          resourceGroup: demo-pipeline
-          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/pipelinedemo2:${{ env.IMAGE_VERSION }}
+          acrName: AZ_BACKEND_ACR_NAME
+          containerAppName: AZ_FRONTEND_ACA_NAME
+          resourceGroup: AZ_RG_NAME
+          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/AZ_BACKEND_ACR_NAME:${{ env.IMAGE_VERSION }}

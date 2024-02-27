@@ -51,18 +51,17 @@ Following resources will be created
 ### Create resource group
 
 ```bash
-az group create --name <rg-name> --location <location>
+az group create --name <rg-name> --location <location> --subscription <subscription-id>
 ```
 
 In our example it wil be
 
 ```bash
-az group create --name azure-demo-pipeline --location eastus
+az group create --name azure-demo-pipeline --location eastus --subscription 4f88eadf-90ee-4213-ab71-48efbbfa5aa3
 ```
 
 Explanation :
 - create recourse group with name `azure-demo-pipeline` in `eastus` location
-
 
 ### Create service principal
 
@@ -75,12 +74,12 @@ az ad sp create-for-rbac --name <app-name> --role contributor --scopes /subscrip
 In our example it will be 
 
 ```Bash
-az ad sp create-for-rbac --name github-deploy-action --role contributor --scopes /subscriptions/0091a550-db6c-44bb-8c82-42e826b6f0ff/resourceGroups/azure-demo-pipeline --json-auth --output json
+az ad sp create-for-rbac --name github-deploy-action --role contributor --scopes /subscriptions/4f88eadf-90ee-4213-ab71-48efbbfa5aa3/resourceGroups/azure-demo-pipeline --json-auth --output json
 ```
 
 Explanation : 
 - Create service principal with `contributor` role and `github-deploy-action` name
-- For subscription `0091a550-db6c-44bb-8c82-42e826b6f0ff` and resource group `azure-demo-pipeline`
+- For subscription `4f88eadf-90ee-4213-ab71-48efbbfa5aa3` and resource group `azure-demo-pipeline`
 - Display service principal credentials as JSON, copy that credentials and save somewhere
 
 ### Create container registries
@@ -92,13 +91,16 @@ az acr create --resource-group <your-resource-group> --name <acr-name> --sku Bas
 In our example it will
 
 ```Bash
-az acr create --resource-group azure-demo-pipeline --name azurepipelinebackend --sku Basic 
+az acr create --resource-group azure-demo-pipeline --subscription 4f88eadf-90ee-4213-ab71-48efbbfa5aa3 --name azurepipelinebackend --sku Basic
+
+az acr create --resource-group azure-demo-pipeline  --subscription 4f88eadf-90ee-4213-ab71-48efbbfa5aa3 --name azurepipelinefrontend --sku Basic
 ```
 
 Explanation
-- Create ACR within recourse group `azure-demo-pipeline` with name `azurepipelinebackend`
-- 
+- Create ACR within recourse group `azure-demo-pipeline` with name `azurepipelinebackend` with `Basic` plan
+- Create ACR within recourse group `azure-demo-pipeline` with name `azurepipelinefrontend` with `Basic` plan
 
+Obtain ACR credentials in 
 
 ### Create container app
 
@@ -121,9 +123,23 @@ az containerapp up \
   --name azure-pipeline-backend-app \
   --resource-group azure-demo-pipeline \
   --location eastus \
-  --environment 'azure-pipeline-backend-app-env' \
+  --environment 'azure-pipeline-app-env' \
+  --image mcr.microsoft.com/k8se/quickstart:latest \
+  --target-port 8080 \
+  --ingress 'external' \
+  --query configuration.ingress.fqdn
+  
+az containerapp up \
+  --name azure-pipeline-frontend-app \
+  --resource-group azure-demo-pipeline \
+  --location eastus \
+  --environment 'azure-pipeline-app-env' \
   --image mcr.microsoft.com/k8se/quickstart:latest \
   --target-port 8080 \
   --ingress 'external' \
   --query configuration.ingress.fqdn
 ```
+
+Explanation
+
+- 
