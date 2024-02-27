@@ -58,4 +58,4 @@ jobs:
           acrName: ${{ secrets.AZ_BACKEND_ACR_NAME }}
           containerAppName: ${{ secrets.AZ_BACKEND_ACA_NAME }}
           resourceGroup: ${{ secrets.AZ_RG_NAME }}
-          imageToDeploy: ${{ secrets.AZ_BACKEND_ACR_LOGIN_SERVER }}/${{ secrets.AZ_BACKEND_ACR_NAME }}:${{ env.IMAGE_VERSION }}
+          imageToDeploy: testpipelinebackend/testpipelinebackend:latest
