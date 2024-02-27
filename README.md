@@ -15,13 +15,15 @@ We have source code in one of our repositories, we need to deploy source code fo
 
 #### Solution overviews
 
+<img style="width: 100%" src="docs/assets/images/1.png" alt="Branches image"/>
+
 - Create necessary branches
 - Create cloud resources
 - Setup workflows
 
 ### Creating necessary branches
 
-<img style="width: 100%" src="docs/assets/images/1.png" alt="Branches image"/>
+<img style="width: 100%" src="docs/assets/images/2.png" alt="Branches image"/>
 
 These branches must be created 
 
@@ -30,59 +32,114 @@ These branches must be created
 - staging
 - dev
 
-### Create cloud resources
+## Create cloud resources
 
-In this example we will create resources in azure cloud 
+In this example we will create resources in azure cloud. I used Azure CLI because it's faster and only one interface to create all necessary resources
 
+Following resources will be created
+- 2 ACR ( Azure Container Registry ), one for backend and one for frontend
+- 2 ACA ( Azure Container App ), one for backend and one for frontend
+- 2 CAE ( Container App Environment ), one for backend and one for frontend
+- 2 LAW ( Log Analytics Workspace ), one for backend and one for frontend
+ 
+### Prepare Azure CLI
 
-#### Create service principal
+- Open Azure CLI
+- Create storage account if needed
+- Choose bash for terminal
+
+### Create resource group
+
+```bash
+az group create --name <rg-name> --location <location> --subscription <subscription-id>
+```
+
+In our example it wil be
+
+```bash
+az group create --name azure-demo-pipeline --location eastus --subscription 4f88eadf-90ee-4213-ab71-48efbbfa5aa3
+```
+
+Explanation :
+- create recourse group with name `azure-demo-pipeline` in `eastus` location
+
+### Create service principal
 
 - Create Service Principal ( registered application ) with following command and copy result credentials in json. Those credentials will be used by github actions
 
 ```Bash
-az ad sp create-for-rbac --name github-actions-app --role contributor --scopes /subscriptions/<subscription-id>/resourceGroups/<rg-name> --json-auth --output json
+az ad sp create-for-rbac --name <app-name> --role contributor --scopes /subscriptions/<subscription-id>/resourceGroups/<rg-name> --json-auth --output json
 ```
 
-Update `<subscription-id>` - with subscription Id and `<rg-name>` - with resource group name
+In our example it will be 
 
-#### Create Azure Container Registry
+```Bash
+az ad sp create-for-rbac --name github-deploy-action --role contributor --scopes /subscriptions/4f88eadf-90ee-4213-ab71-48efbbfa5aa3/resourceGroups/azure-demo-pipeline --json-auth --output json
+```
 
-- Go to "Resource Groups" page
-- Create new resource and choose subscription and region
-- Go to "Azure Container Registry" resource
-- Create container registry resource group and region
+Explanation : 
+- Create service principal with `contributor` role and `github-deploy-action` name
+- For subscription `4f88eadf-90ee-4213-ab71-48efbbfa5aa3` and resource group `azure-demo-pipeline`
+- Display service principal credentials as JSON, copy that credentials and save somewhere
 
-#### Create Azure Container App
+### Create container registries
 
-<img style="width: 100%" src="docs/assets/images/create-container-app.png" alt="Branches image"/>
+```bash
+az acr create --resource-group <your-resource-group> --name <acr-name> --sku Basic 
+```
 
-- Select resource group
-- Enter container app name
-- Select region and create new app environment
+In our example it will
 
-<img style="width: 100%" src="docs/assets/images/choose-container.png" alt="Branches image"/>
+```Bash
+az acr create --resource-group azure-demo-pipeline --subscription 4f88eadf-90ee-4213-ab71-48efbbfa5aa3 --name azurepipelinebackend --sku Basic
 
-- Uncheck "Use quickstart image"
-- Select Azure Container Registry as image source
-- Select registry, image and image tag
-- Choose consumption allocation
+az acr create --resource-group azure-demo-pipeline  --subscription 4f88eadf-90ee-4213-ab71-48efbbfa5aa3 --name azurepipelinefrontend --sku Basic
+```
 
-#### Setting up workflows
+Explanation
+- Create ACR within recourse group `azure-demo-pipeline` with name `azurepipelinebackend` with `Basic` plan
+- Create ACR within recourse group `azure-demo-pipeline` with name `azurepipelinefrontend` with `Basic` plan
 
-Workflows will be set up for backend and frontend solutions separately
+Obtain ACR credentials in 
 
-Development - **dev** branch
+### Create container app
 
-- any pull request or commit in pull request should trigger workflow to run tests
-- any push should trigger workflow to build container and push to registry for development environment with "dev" tag
+```Bash
+az containerapp up \
+  --name <container-name> \
+  --resource-group <rg-name> \
+  --location <location> \
+  --environment <environment-name> \
+  --image mcr.microsoft.com/k8se/quickstart:latest \
+  --target-port 8080 \
+  --ingress 'external' \
+  --query configuration.ingress.fqdn
+```
 
-Pre-Release - **staging** branch
+In our example it will be
 
-- any pull request should trigger workflow to run tests
-- any push should trigger workflow to build container and push to registry for staging environment with "staging" tag
+```Bash
+az containerapp up \
+  --name azure-pipeline-backend-app \
+  --resource-group azure-demo-pipeline \
+  --location eastus \
+  --environment 'azure-pipeline-app-env' \
+  --image mcr.microsoft.com/k8se/quickstart:latest \
+  --target-port 8080 \
+  --ingress 'external' \
+  --query configuration.ingress.fqdn
+  
+az containerapp up \
+  --name azure-pipeline-frontend-app \
+  --resource-group azure-demo-pipeline \
+  --location eastus \
+  --environment 'azure-pipeline-app-env' \
+  --image mcr.microsoft.com/k8se/quickstart:latest \
+  --target-port 8080 \
+  --ingress 'external' \
+  --query configuration.ingress.fqdn
+```
 
-Release - **release/** branch
+Explanation
 
-- any pull request should trigger workflow to run tests
-- any push should trigger workflow to build container and push to registry for staging environment with "vx.x.x" tag
-
+- 
