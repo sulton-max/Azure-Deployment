@@ -22,11 +22,9 @@ jobs:
           echo "IMAGE_VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Log in to Azure
-        uses: azure/docker-login@v1
+        uses: azure/login@v1
         with:
-          login-server: ${{ secrets.AZ_BACKEND_ACR_LOGIN_SERVER }}
-          username: ${{ secrets.AZ_BACKEND_ACR_USERNAME }}
-          password: ${{ secrets.AZ_BACKEND_ACR_PASSWORD }}
+          creds: ${{ secrets.AZ_SP_CREDENTIALS }}
 
       - name: Build and push image to ACR
         uses: docker/build-push-action@v2
