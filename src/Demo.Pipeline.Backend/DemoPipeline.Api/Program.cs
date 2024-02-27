@@ -8,6 +8,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/", () => "Pipeline test!");
+app.MapGet("/", () => "Pipeline test test!");
 
 app.Run();
