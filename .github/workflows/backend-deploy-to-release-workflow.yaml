@@ -33,7 +33,7 @@ jobs:
         with:
           context: ./src/Demo.Pipeline.Backend
           file: ./src/Demo.Pipeline.Backend/DemoPipeline.Api/Dockerfile
-          tags: ${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.AZ_BACKEND_ACR_NAME }}:${{ env.IMAGE_VERSION }}
+          tags: ${{ secrets.AZ_BACKEND_ACR_LOGIN_SERVER }}/${{ secrets.AZ_BACKEND_ACR_NAME }}:${{ env.IMAGE_VERSION }}
           push: true
 
   create-container-app:
@@ -58,4 +58,4 @@ jobs:
           acrName: AZ_BACKEND_ACR_NAME
           containerAppName: AZ_FRONTEND_ACA_NAME
           resourceGroup: AZ_RG_NAME
-          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/${{ secrets.AZ_BACKEND_ACR_NAME }}:${{ env.IMAGE_VERSION }}
+          imageToDeploy: ${{ secrets.AZ_BACKEND_ACR_LOGIN_SERVER }}/${{ secrets.AZ_BACKEND_ACR_NAME }}:${{ env.IMAGE_VERSION }}
